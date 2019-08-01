@@ -1,0 +1,29 @@
+:ruby
+  @errors ||= []
+  @collection ||= []
+
+= content_for :page_title do
+  = plural_resource_name(Spree::Product)
+
+.alert.alert-warning
+  = t('.import_csv_warning')&.html_safe
+
+- if @errors.any?
+  .alert.alert-danger
+    %h4= t('.errors_occured')
+    - @errors.each do |error|
+      %p
+        Line #{error[:index]}
+        = error[:message]
+
+= form_with(url: admin_products_import_path, method: :post) do |f|
+  .col-12.col-md-4
+    .form-group.field
+      = f.label(:file, t('.file'))
+      = f.file_field :file, accept: 'text/csv'
+    .form-actions
+      = f.submit t('.upload'), { class: 'btn btn-primary btn-success' }
+
+- if @collection.any?
+  %h4= t('.successfully_uploaded')
+  = render partial: 'spree/admin/products/table', locals: { collection: @collection }
