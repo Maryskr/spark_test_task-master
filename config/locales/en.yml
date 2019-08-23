@@ -41,3 +41,6 @@ en:
               name; description; price; availability_date; slug; stock_total; category"
             file: CSV file
             upload: Upload
+          create:
+            success: File successfully uploaded
+            error: Something went wrong. Try again later

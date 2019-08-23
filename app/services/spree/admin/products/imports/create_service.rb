@@ -12,8 +12,6 @@ module Spree
           end
 
           def call
-            upload_to_S3
-
             options = { skip_blanks: true, headers: true, col_sep: ';' }
             ::SmarterCSV.process(file.path, options) do |chunk|
               row = chunk.first
@@ -56,12 +54,6 @@ module Spree
 
           def price_from_string(price)
             price.gsub(/[^\d^\.]/, '').to_f / 100
-          end
-
-          def upload_to_S3
-            s3 = S3_BUCKET
-            obj = s3.object(file.original_filename)
-            obj.upload_file(file.path)
           end
 
           attr_accessor :file, :products, :errors

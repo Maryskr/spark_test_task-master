@@ -1,5 +1,5 @@
 Aws.config.update({
-  region: 'us-east-1',
+  region: 'us-east-2',
   credentials: Aws::Credentials.new(Rails.application.secrets.aws_key, Rails.application.secrets.aws_secret),
 })
 

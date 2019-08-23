@@ -7,21 +7,30 @@ module Spree
         def new; end
 
         def create
-          result = ::Spree::Admin::Products::Imports::CreateService.call(import_params[:file])
-          @errors = result.error
-          if @errors.any?
-            @collection = ::Spree::Product.where(id: result.value)
-            render :new
-          else
+          obj = S3_BUCKET.object(filename)
+          obj.upload_file(path)
+
+          if obj.public_url
+            ::ProductsUploadJob.perform_later(obj.public_url, filename)
             flash[:success] = t('.success')
-            redirect_to admin_products_path
+          else
+            flash[:error] = t('.error')
           end
+          redirect_to admin_products_path
         end
 
         private
 
         def import_params
           params.permit(:file)
+        end
+
+        def filename
+          import_params[:file]&.original_filename
+        end
+
+        def path
+          import_params[:file].path
         end
       end
     end
