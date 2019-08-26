@@ -11,5 +11,8 @@ class ProductsUploadJob < ApplicationJob
     obj.get(response_target: path)
     ::Spree::Admin::Products::Imports::CreateService.call(file)
     File.delete(path) if File.exist?(path)
+    # TODO it would be nice to notify user about upload result. for example,
+    # send mail with CSV file wich contain list of successfully loaded products
+    # and list of errors!
   end
 end

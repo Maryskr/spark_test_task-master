@@ -44,3 +44,4 @@ en:
           create:
             success: File successfully uploaded
             error: Something went wrong. Try again later
+  import_form_csv: Import from CSV
