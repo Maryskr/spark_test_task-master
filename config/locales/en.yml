@@ -30,7 +30,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  import_from_csv: Import from CSV
   spree:
     admin:
       products:
@@ -44,4 +44,3 @@ en:
           create:
             success: File successfully uploaded
             error: Something went wrong. Try again later
-  import_form_csv: Import from CSV
