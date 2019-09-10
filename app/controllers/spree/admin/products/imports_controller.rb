@@ -7,11 +7,9 @@ module Spree
         def new; end
 
         def create
-          obj = S3_BUCKET.object(filename)
-          obj.upload_file(path)
-
-          if obj.public_url
-            ::ProductsUploadJob.perform_later(obj.public_url, filename)
+          attachment = ::Spree::Products::Imports::Attachment.new(file: import_params[:file])
+          if attachment.save
+            ::ProductsUploadJob.perform_later(attachment.id)
             flash[:success] = t('.success')
           else
             flash[:error] = t('.error')
@@ -23,14 +21,6 @@ module Spree
 
         def import_params
           params.permit(:file)
-        end
-
-        def filename
-          import_params[:file]&.original_filename
-        end
-
-        def path
-          import_params[:file].path
         end
       end
     end

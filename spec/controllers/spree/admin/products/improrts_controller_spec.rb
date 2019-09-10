@@ -20,12 +20,19 @@ RSpec.describe Spree::Admin::Products::ImportsController, type: :controller do
       let!(:stock_location) { create(:stock_location) }
       let(:file) { fixture_file_upload(Rails.root.join('sample.csv')) }
 
+      subject { post :create, params: { file: file } }
+
       it 'responds successfully with an HTTP 200 status code' do
+        ActiveJob::Base.queue_adapter = :test
+
         post :create, params: { file: file }
 
         expect(flash[:error]).to eq nil
         expect(flash[:success]).not_to be_empty
       end
+
+      it { expect {subject}.to change{::Spree::Products::Imports::Attachment.count}.by(1) }
+      it { expect { subject }.to have_enqueued_job(::ProductsUploadJob) }
     end
   end
 end
